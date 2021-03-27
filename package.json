@@ -1,0 +1,37 @@
+{
+  "name": "adb-explorer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/main/main.js",
+  "scripts": {
+    "start": "node ./build/index.js",
+    "dev": "concurrently -n svelte,tsc,electron -c \"#FF5F00,#3D8CBE,#2F74C0\" \"npm:dev-svelte\" \"npm:dev-ts\" \"npm:dev-electron\"",
+    "dev-electron": "node ./build/scripts/watch-electron.js",
+    "dev-svelte": "svelte-kit dev",
+    "dev-ts": "tsc --watch --preserveWatchOutput --pretty",
+    "build-svelte": "svelte-kit build",
+    "dev-electron-main": "electron ."
+  },
+  "keywords": [],
+  "author": "Rafael Martinez",
+  "license": "MIT",
+  "dependencies": {
+    "@sveltejs/adapter-static": "^1.0.0-next.0",
+    "chokidar": "^3.5.1",
+    "concurrently": "^6.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "next",
+    "@sveltejs/kit": "next",
+    "@types/node": "^14.14.35",
+    "electron": "^12.0.2",
+    "prettier": "~2.2.1",
+    "prettier-plugin-svelte": "^2.2.0",
+    "sass": "^1.0.0",
+    "svelte": "^3.29.0",
+    "svelte-preprocess": "^4.0.0",
+    "tslib": "^2.0.0",
+    "typescript": "^4.0.0",
+    "vite": "^2.1.0"
+  }
+}

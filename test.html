@@ -1,0 +1,5 @@
+<script type="module">
+  const { ipcRenderer } = require("electron");
+
+  ipcRenderer.invoke("perform-action", { user: "rafael" });
+</script>
