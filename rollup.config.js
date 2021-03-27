@@ -6,6 +6,7 @@ import { terser } from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
 import typescript from "@rollup/plugin-typescript";
 import css from "rollup-plugin-css-only";
+import postcss from "rollup-plugin-postcss";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -64,6 +65,19 @@ export default {
       dedupe: ["svelte"],
     }),
     commonjs(),
+    postcss({
+      extensions: [".scss", ".sass"],
+      extract: false,
+      minimize: true,
+      use: [
+        [
+          "sass",
+          {
+            includePaths: ["./src/renderer/theme", "./node_modules"],
+          },
+        ],
+      ],
+    }),
     typescript({
       module: "esnext",
       moduleResolution: "node",
