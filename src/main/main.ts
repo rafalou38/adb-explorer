@@ -24,8 +24,8 @@ function createWindow() {
   // win.setAlwaysOnTop(true, "normal");
 
   win.webContents.openDevTools();
-  win.loadURL(`http://localhost:3000`);
-  // win.loadFile("test.html");
+  // win.loadURL(`http://localhost:3000`);
+  win.loadFile("./public/index.html");
 }
 
 app.whenReady().then(() => {
