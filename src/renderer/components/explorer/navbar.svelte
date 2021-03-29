@@ -3,12 +3,14 @@
   import Ripple from "@smui/ripple";
 
   export let path: string;
+  export let onChange: (newPath: string) => void;
   let typing = false;
 
   function gotoPath(index: number) {
     let asaray = path.split("/").filter((e) => e);
     asaray.splice(index + 1, asaray.length - index);
     path = "/" + asaray.join("/");
+    onChange(path);
   }
   function startTyping(e: MouseEvent) {
     if (e.target.classList.contains("nav")) {
@@ -17,9 +19,10 @@
     }
   }
   function stopTyping(e: MouseEvent) {
-    if (!e.target.classList.contains("nav")) {
+    if (!e.target.classList.contains("nav") && typing) {
       console.log("stopped typing");
       typing = false;
+      onChange(path);
     }
   }
   function init(e: HTMLInputElement) {
@@ -62,6 +65,7 @@
 
     height: 40px;
     width: 100%;
+    flex-shrink: 0;
 
     display: flex;
     align-items: flex-start;

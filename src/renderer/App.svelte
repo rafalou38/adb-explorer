@@ -1,6 +1,20 @@
 <script lang="ts">
   import Navbar from "./components/explorer/navbar.svelte";
-  let path = "/sdcard/Download/Received/bluetooth/files";
+  import FilesContainer from "./components/explorer/filesContainer.svelte";
+  const { ipcRenderer } = require("electron");
+
+  let path = "/sdcard/";
+  let files = [];
+  function handlePathChange(newPath: string) {
+    path = newPath;
+    ipcRenderer.invoke("list-content", newPath).then((v) => {
+      files = v;
+    });
+  }
+  function handleNavigate(dir: string) {
+    path = `${path}/${dir}/`;
+    handlePathChange(path);
+  }
 </script>
 
 <svelte:head>
@@ -12,8 +26,20 @@
 </svelte:head>
 
 <main>
-  <Navbar {path} />
+  <Navbar {path} onChange={handlePathChange} />
+  <FilesContainer {files} onNavigate={handleNavigate} />
 </main>
 
 <style>
+  main {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+
+    padding: 20px;
+    box-sizing: border-box;
+
+    gap: 10px;
+  }
 </style>

@@ -1,13 +1,12 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, clipboard } from "electron";
 import path from "path";
-// Dans le processus principal
-const { ipcMain } = require("electron");
+import { StartWatcher } from "./watch-svelte";
+import { electron } from "node:process";
+import { writeFile } from "fs";
+import "./icon";
+import "./adb-commands";
 
-ipcMain.handle("perform-action", (event, ...args) => {
-  // ... actions réalisées au nom du Renderer
-  console.log("action performed:", args);
-});
-
+StartWatcher("C:/Users/Rafael/Desktop/Code/adb-explorer/public");
 function createWindow() {
   const win = new BrowserWindow({
     width: 1300,
@@ -21,15 +20,22 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"),
     },
   });
-  // win.setAlwaysOnTop(true, "normal");
 
   win.webContents.openDevTools();
   // win.loadURL(`http://localhost:3000`);
   win.loadFile("./public/index.html");
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createWindow();
+  // ls("/sdcard/").then((e) => {
+  //   clipboard.writeText(JSON.stringify(e));
+  // });
+  // writeFile(
+  //   "./out.png",
+  //   (await app.getFileIcon("../../src")).toPNG(),
+  //   console.log
+  // );
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
