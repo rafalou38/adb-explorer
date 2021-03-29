@@ -1,6 +1,9 @@
 import { exec } from "child_process";
 
-function ls(dir: string = "/") {
+export function ls(dir: string = "/") {
+  if (!dir.endsWith("/")) {
+    dir += "/";
+  }
   return new Promise((resolve, reject) => {
     exec(`adb shell "ls -Alc ${dir} 2>/dev/null"`, (_err, stdout, _stderr) => {
       const lines = stdout.split("\r\n");
@@ -28,7 +31,7 @@ function _parseLsLine(line: string): IFile | boolean {
     last_modification_hour,
     ...file_name_raw
   ] = line.split(/\s+/);
-  if (!file_name_raw) return false;
+  if (file_name_raw.length === 0) return false;
 
   let file_name = file_name_raw.join(" ");
   let type: "directory" | "file" | "link" | "unknown";
@@ -63,5 +66,3 @@ function _parseLsLine(line: string): IFile | boolean {
   };
   return file;
 }
-
-ls("/bin/").then(console.log);
