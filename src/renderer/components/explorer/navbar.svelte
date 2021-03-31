@@ -92,7 +92,7 @@
     padding-right: 50px;
 
     height: 40px;
-    width: 100%;
+    flex-grow: 1;
     flex-shrink: 0;
 
     display: flex;
