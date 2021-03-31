@@ -55,7 +55,7 @@
     aspect-ratio: 1/1;
 
     height: 80px;
-    width: auto;
+    width: 100%;
 
     margin-bottom: 3px;
 
