@@ -14,13 +14,11 @@
   }
   function startTyping(e: MouseEvent) {
     if (e.target.classList.contains("nav")) {
-      console.log("start typing");
       typing = true;
     }
   }
   function stopTyping(e: MouseEvent) {
     if (!e.target.classList.contains("nav") && typing) {
-      console.log("stopped typing");
       typing = false;
       onChange(path);
     }

@@ -8,11 +8,8 @@
   let image: string;
   const max_name_lenght = 10;
 
-  console.log(data);
-
   $: {
     if (data.type === "file") {
-      console.log(data.file_name);
       ipcRenderer.invoke("get-icon", data.file_name).then((v) => {
         image = v;
       });
