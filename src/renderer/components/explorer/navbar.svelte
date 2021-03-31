@@ -2,6 +2,7 @@
 <script lang="ts">
   import Ripple from "@smui/ripple";
 
+  const { dirname } = require("path");
   export let path: string;
   export let onChange: (newPath: string) => void;
   let typing = false;
@@ -10,6 +11,10 @@
     let asaray = path.split("/").filter((e) => e);
     asaray.splice(index + 1, asaray.length - index);
     path = "/" + asaray.join("/");
+    onChange(path);
+  }
+  function upDir() {
+    path = dirname(path);
     onChange(path);
   }
   function startTyping(e: MouseEvent) {
@@ -30,28 +35,50 @@
 
 <svelte:body on:click={stopTyping} />
 
-<div class="nav" on:click={startTyping}>
-  {#if typing}
-    <input
-      type="text"
-      class="nav"
-      id="input"
-      spellcheck="false"
-      bind:value={path}
-      use:init
-    />
-  {:else}
-    {#each path.split("/").filter((e) => e) as folder, i (i)}
-      <span
-        class="nav__item"
-        use:Ripple={{ ripple: true, color: "surface" }}
-        on:click={() => gotoPath(i)}>{folder}</span
-      >
-    {/each}
-  {/if}
-</div>
+<header>
+  <button
+    class="up-button"
+    use:Ripple={{ ripple: true, color: "surface" }}
+    on:click={upDir}
+  >
+    <span class="iconify" data-icon="mdi:arrow-up" data-inline="false" />
+  </button>
+  <div class="nav" on:click={startTyping}>
+    {#if typing}
+      <input
+        type="text"
+        class="nav"
+        id="input"
+        spellcheck="false"
+        bind:value={path}
+        use:init
+      />
+    {:else}
+      {#each path.split("/").filter((e) => e) as folder, i (i)}
+        <span
+          class="nav__item"
+          use:Ripple={{ ripple: true, color: "surface" }}
+          on:click={() => gotoPath(i)}>{folder}</span
+        >
+      {/each}
+    {/if}
+  </div>
+</header>
 
 <style lang="scss">
+  header {
+    display: flex;
+  }
+  .up-button {
+    background: #f6f6f6;
+    height: 40px;
+    width: 40px;
+    border-radius: 25px;
+    flex-shrink: 0;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+  }
   .nav {
     font-family: "Roboto";
     font-weight: 500;
