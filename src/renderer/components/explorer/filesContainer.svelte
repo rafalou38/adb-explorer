@@ -1,24 +1,18 @@
 <script lang="ts">
   import Element from "./element.svelte";
   export let files: IFile[] = [];
-  export let onNavigate: (dirName: string) => void;
+  export let onOpen: (data: IFile) => void;
 
   $: files.sort(
     (a, e) =>
       (e.type === "directory" ? 1 : 0) - (a.type === "directory" ? 1 : 0)
   );
-
-  function handleClick(data: IFile) {
-    if (data.type == "directory") {
-      onNavigate(data.file_name);
-    }
-  }
 </script>
 
 <div class="wrapper">
   <div class="gap">
     {#each files as file (file.file_name)}
-      <Element data={file} onClick={handleClick} />
+      <Element data={file} onClick={onOpen} />
     {/each}
   </div>
 </div>

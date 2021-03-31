@@ -14,9 +14,25 @@
       files = v;
     });
   }
-  function handleNavigate(dir: string) {
-    path = `${path}/${dir}/`;
-    handlePathChange(path);
+  handlePathChange(path);
+  async function handleOpen(data: IFile) {
+    switch (data.type) {
+      case "directory":
+        path = `${path}/${data.file_name}/`;
+        handlePathChange(path);
+        break;
+      case "link":
+        let link_data = await ipcRenderer.invoke("get-link-data", data.link_to);
+        console.log("link points to:", data);
+
+        if (link_data.type === "directory") {
+          handlePathChange(data.file_name);
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 </script>
 
@@ -30,7 +46,7 @@
 
 <main>
   <Navbar {path} onChange={handlePathChange} />
-  <FilesContainer {files} onNavigate={handleNavigate} />
+  <FilesContainer {files} onOpen={handleOpen} />
 </main>
 
 <style>
