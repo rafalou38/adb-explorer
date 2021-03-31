@@ -1,22 +1,26 @@
-import { exec } from "child_process";
+import { ExecException } from "node:child_process";
+import { shell } from "./shell";
 
-export function ls(dir: string = "/") {
-  if (!dir.endsWith("/")) {
-    dir += "/";
+export async function ls(dir: string = "/", all = false) {
+  let { stdout } = (await shell("ls", [
+    "-lc",
+    "all" ? "-a" : "-A",
+    dir,
+    "2>/dev/null",
+  ])) as {
+    err: ExecException | null;
+    stdout: string;
+    stderr: string;
+  };
+  const lines = stdout.split("\r\n");
+  const files: IFile[] = [];
+  for (const line of lines) {
+    let parsed = _parseLsLine(line);
+    if (parsed) {
+      files.push(parsed as IFile);
+    }
   }
-  return new Promise((resolve, reject) => {
-    exec(`adb shell "ls -Alc ${dir} 2>/dev/null"`, (_err, stdout, _stderr) => {
-      const lines = stdout.split("\r\n");
-      const files: IFile[] = [];
-      for (const line of lines) {
-        let parsed = _parseLsLine(line);
-        if (parsed) {
-          files.push(parsed as IFile);
-        }
-      }
-      resolve(files);
-    });
-  });
+  return files;
 }
 
 function _parseLsLine(line: string): IFile | boolean {
