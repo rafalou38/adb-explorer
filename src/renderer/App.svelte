@@ -6,6 +6,9 @@
   let path = "/sdcard/";
   let files = [];
   function handlePathChange(newPath: string) {
+    if (!newPath.endsWith("/")) {
+      newPath += "/";
+    }
     path = newPath;
     ipcRenderer.invoke("list-content", newPath).then((v) => {
       files = v;
