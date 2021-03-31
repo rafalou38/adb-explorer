@@ -95,12 +95,10 @@ export default {
       ],
     }),
     typescript({
-      module: "esnext",
-      moduleResolution: "node",
       target: "es2017",
       sourceMap: !production,
       inlineSources: !production,
-      exclude: "src/main/*",
+      exclude: "src/main/**/*",
     }),
 
     // In dev mode, call `npm run start` once

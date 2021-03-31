@@ -8,7 +8,7 @@
     "dev": "concurrently -n \"svelte  \",\"tsc     \",electron -c \"#FF5F00,#3D8CBE,#2F74C0\" \"npm:dev-svelte\" \"npm:dev-ts\" \"npm:dev-electron\"",
     "dev-electron": "node ./build/scripts/watch-electron.js",
     "dev-svelte": "rollup -c -w",
-    "dev-ts": "tsc --watch --preserveWatchOutput --pretty",
+    "dev-ts": "tsc -p ./src/main/ --watch --preserveWatchOutput --pretty",
     "build-svelte": "rollup -c"
   },
   "keywords": [],

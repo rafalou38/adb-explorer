@@ -3,7 +3,10 @@
 
   "compilerOptions": {
     "lib": ["DOM", "es2017"],
-    "types": ["node"]
+    "types": ["node"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2017"
   },
   "include": ["./**/*"],
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"]
