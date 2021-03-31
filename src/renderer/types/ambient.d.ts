@@ -1,3 +1,5 @@
+declare module "*.svelte";
+
 declare interface MouseEvent {
   target: HTMLBaseElement;
 }
