@@ -1,25 +1,20 @@
 <!-- TODO show less items if not enough place -->
 <script lang="ts">
   import Ripple from "@smui/ripple";
-  import { cleanPath } from "../../utils";
+  import { setPath, upDir } from "../../Path";
+  import { path_history } from "../../stores";
 
-  const { dirname } = require("path");
-  export let path: string;
-  export let onChange: (newPath: string) => void;
   let typing = false;
+  let textInput: HTMLInputElement;
 
   function gotoPath(index: number) {
-    let asaray = path.split("/").filter((e) => e);
+    let newPath = path_history.value;
+    let asaray = newPath.split("/").filter((e) => e);
     asaray.splice(index + 1, asaray.length - index);
-    path = "/" + asaray.join("/");
-    path = cleanPath(path);
-    onChange(path);
+    newPath = "/" + asaray.join("/");
+    setPath(newPath);
   }
-  function upDir() {
-    path = dirname(path);
-    path = cleanPath(path);
-    onChange(path);
-  }
+
   function startTyping(e: MouseEvent) {
     if (e.target.classList.contains("nav")) {
       typing = true;
@@ -28,7 +23,7 @@
   function stopTyping(e: MouseEvent) {
     if (!e.target.classList.contains("nav") && typing) {
       typing = false;
-      onChange(path);
+      setPath(textInput.value);
     }
   }
   function init(e: HTMLInputElement) {
@@ -39,8 +34,24 @@
 <svelte:body on:click={stopTyping} />
 
 <header>
+  <div class="history">
+    <button
+      class="history__btn icon-btn"
+      use:Ripple={{ ripple: true, color: "surface" }}
+      on:click={() => path_history.undo()}
+    >
+      <span class="iconify" data-icon="mdi:arrow-left" data-inline="false" />
+    </button>
+    <button
+      class="history__btn icon-btn"
+      use:Ripple={{ ripple: true, color: "surface" }}
+      on:click={() => path_history.redo()}
+    >
+      <span class="iconify" data-icon="mdi:arrow-right" data-inline="false" />
+    </button>
+  </div>
   <button
-    class="up-button"
+    class="up-button icon-btn"
     use:Ripple={{ ripple: true, color: "surface" }}
     on:click={upDir}
   >
@@ -53,11 +64,11 @@
         class="nav"
         id="input"
         spellcheck="false"
-        bind:value={path}
+        bind:this={textInput}
         use:init
       />
     {:else}
-      {#each path.split("/").filter((e) => e) as folder, i (i)}
+      {#each $path_history.split("/").filter((e) => e) as folder, i (i)}
         <span
           class="nav__item"
           use:Ripple={{ ripple: true, color: "surface" }}
@@ -72,15 +83,30 @@
   header {
     display: flex;
   }
-  .up-button {
+  .icon-btn {
     background: #f6f6f6;
     height: 40px;
     width: 40px;
     border-radius: 25px;
-    flex-shrink: 0;
-    margin-right: 10px;
     border: none;
     cursor: pointer;
+  }
+  .history {
+    flex-shrink: 0;
+    display: flex;
+    margin-right: 10px;
+    &__btn {
+      &:nth-child(1) {
+        border-radius: 25px 0 0 25px;
+      }
+      &:nth-child(2) {
+        border-radius: 0 25px 25px 0;
+      }
+    }
+  }
+  .up-button {
+    margin-right: 10px;
+    flex-shrink: 0;
   }
   .nav {
     font-family: "Roboto";

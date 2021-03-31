@@ -1,17 +1,13 @@
 <script lang="ts">
-  import Element from "./element.svelte";
-  export let files: IFile[] = [];
-  export let onOpen: (data: IFile) => void;
+  import { files } from "../../stores";
 
-  $: files.sort(
-    (a, e) =>
-      (e.type === "directory" ? 1 : 0) - (a.type === "directory" ? 1 : 0)
-  );
+  import Element from "./element.svelte";
+  export let onOpen: (data: IFile) => void;
 </script>
 
 <div class="wrapper">
   <div class="gap">
-    {#each files as file (file.file_name)}
+    {#each $files as file (file.file_name)}
       <Element data={file} onClick={onOpen} />
     {/each}
   </div>

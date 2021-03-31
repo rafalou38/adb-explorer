@@ -1,42 +1,22 @@
 <script lang="ts">
   import Navbar from "./components/explorer/navbar.svelte";
   import FilesContainer from "./components/explorer/filesContainer.svelte";
-  import { cleanPath } from "./utils";
-  import { History } from "./History";
+
   const { ipcRenderer } = require("electron");
+  import { cd } from "./Path";
+  import { path_history } from "./stores";
 
-  let files = [];
-  let path_history = new History("/sdcard/");
-
-  function handlePathChange(newPath: string) {
-    if (!newPath.endsWith("/")) {
-      newPath += "/";
-    }
-    path_history.change(cleanPath(newPath));
-  }
-
-  path_history.subscribe(updateFilesList, () => {});
-  function updateFilesList() {
-    ipcRenderer.invoke("list-content", path_history.value).then((v) => {
-      files = v;
-    });
-  }
-
-  handlePathChange(path_history.value);
   async function handleOpen(data) {
     switch (data.type) {
       case "directory":
-        path_history.change(
-          cleanPath(`${path_history.value}/${data.file_name}/`)
-        );
-        handlePathChange(path_history.value);
+        cd(data.file_name);
         break;
       case "link":
         let link_data = await ipcRenderer.invoke("get-link-data", data.link_to);
         console.log("link points to:", data);
 
         if (link_data.type === "directory") {
-          handlePathChange(data.file_name);
+          cd(data.file_name);
         }
         break;
 
@@ -77,8 +57,8 @@
 <svelte:body on:auxclick={handleAuxclick} on:keypress={handleKeyPress} />
 
 <main>
-  <Navbar path={$path_history} onChange={handlePathChange} />
-  <FilesContainer {files} onOpen={handleOpen} />
+  <Navbar />
+  <FilesContainer onOpen={handleOpen} />
 </main>
 
 <style>
