@@ -1,6 +1,7 @@
 <script lang="ts">
   import Navbar from "./components/explorer/navbar.svelte";
   import FilesContainer from "./components/explorer/filesContainer.svelte";
+  import { cleanPath } from "./utils";
   const { ipcRenderer } = require("electron");
 
   let path = "/sdcard/";
@@ -9,7 +10,7 @@
     if (!newPath.endsWith("/")) {
       newPath += "/";
     }
-    path = newPath;
+    path = cleanPath(newPath);
     ipcRenderer.invoke("list-content", newPath).then((v) => {
       files = v;
     });

@@ -1,6 +1,7 @@
 <!-- TODO show less items if not enough place -->
 <script lang="ts">
   import Ripple from "@smui/ripple";
+  import { cleanPath } from "../../utils";
 
   const { dirname } = require("path");
   export let path: string;
@@ -11,10 +12,12 @@
     let asaray = path.split("/").filter((e) => e);
     asaray.splice(index + 1, asaray.length - index);
     path = "/" + asaray.join("/");
+    path = cleanPath(path);
     onChange(path);
   }
   function upDir() {
     path = dirname(path);
+    path = cleanPath(path);
     onChange(path);
   }
   function startTyping(e: MouseEvent) {
