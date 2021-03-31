@@ -4,7 +4,7 @@ import { shell } from "./shell";
 export async function ls(dir: string = "/", all = false) {
   let { stdout } = (await shell("ls", [
     "-lc",
-    "all" ? "-a" : "-A",
+    all ? "-a" : "-A",
     dir,
     "2>/dev/null",
   ])) as {
