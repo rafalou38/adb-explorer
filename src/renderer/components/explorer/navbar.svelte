@@ -64,6 +64,7 @@
         class="nav"
         id="input"
         spellcheck="false"
+        value={path_history.value}
         bind:this={textInput}
         use:init
       />
