@@ -1,12 +1,14 @@
 <script lang="ts">
   import Navbar from "./components/explorer/navbar.svelte";
   import FilesContainer from "./components/explorer/filesContainer.svelte";
+  import Preview from "./components/explorer/preview.svelte";
 
   const { ipcRenderer } = require("electron");
   import { cd } from "./Path";
   import { path_history } from "./stores";
+  const join = require("path");
 
-  async function handleOpen(data) {
+  async function handleOpen(data: IFile) {
     switch (data.type) {
       case "directory":
         cd(data.file_name);
@@ -19,6 +21,11 @@
           cd(data.file_name);
         }
         break;
+      case "file":
+        let file_data = await ipcRenderer.invoke(
+          "get-file-data",
+          join(path_history.value, data.file_name)
+        );
 
       default:
         break;
@@ -56,13 +63,16 @@
 
 <svelte:body on:auxclick={handleAuxclick} on:keypress={handleKeyPress} />
 
-<main>
+<div class="app">
   <Navbar />
-  <FilesContainer onOpen={handleOpen} />
-</main>
+  <div class="main">
+    <FilesContainer onOpen={handleOpen} />
+    <Preview />
+  </div>
+</div>
 
 <style>
-  main {
+  .app {
     display: flex;
     flex-direction: column;
 
@@ -72,5 +82,9 @@
     box-sizing: border-box;
 
     gap: 10px;
+  }
+  .main {
+    display: flex;
+    flex-grow: 1;
   }
 </style>
