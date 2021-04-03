@@ -1,10 +1,15 @@
 import { ipcMain } from "electron";
 import { ExecException } from "child_process";
-import { ls, shell } from "./adb";
+import { ls, shell, getMime } from "./adb";
 import { basename } from "path";
 
 ipcMain.handle("list-content", async (event, path: string) => {
   return await ls(path);
+});
+
+ipcMain.handle("get-file-mime", async (event, path: string) => {
+  const fileMime = await getMime(path);
+  return fileMime;
 });
 
 ipcMain.handle("get-link-data", async (event, path: string) => {
