@@ -1,8 +1,5 @@
-import { app, BrowserWindow, clipboard } from "electron";
-import path from "path";
+import { app, BrowserWindow } from "electron";
 import { StartWatcher } from "./watch-svelte";
-import { electron } from "node:process";
-import { writeFile } from "fs";
 import "./icon";
 import "./adb-commands";
 
@@ -17,7 +14,6 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      preload: path.join(__dirname, "preload.js"),
     },
   });
 
