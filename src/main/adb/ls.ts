@@ -2,10 +2,12 @@ import { ExecException } from "node:child_process";
 import { shell } from "./shell";
 
 export async function ls(dir: string = "/", all = false) {
+  console.log("ls of dir", dir);
+
   let { stdout } = (await shell("ls", [
     "-lc",
     all ? "-a" : "-A",
-    dir,
+    `'${dir}'`,
     "2>/dev/null",
   ])) as {
     err: ExecException | null;
