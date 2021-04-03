@@ -15,3 +15,8 @@ declare interface IFile {
   file_name: string;
   link_to?: string;
 }
+
+declare interface IPreview {
+  type: string;
+  body: string;
+}

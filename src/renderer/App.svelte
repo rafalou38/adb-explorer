@@ -6,7 +6,13 @@
   const { ipcRenderer } = require("electron");
   import { cd } from "./Path";
   import { path_history } from "./stores";
-  const join = require("path");
+  import { cleanPath } from "./utils";
+  const { join } = require("path");
+
+  let curentPreview: IPreview = {
+    type: "",
+    body: "",
+  };
 
   async function handleOpen(data: IFile) {
     switch (data.type) {
@@ -22,10 +28,22 @@
         }
         break;
       case "file":
-        let file_data = await ipcRenderer.invoke(
-          "get-file-data",
-          join(path_history.value, data.file_name)
+        // https://github.com/metonym/svelte-highlight
+        // TODO add a code type ex: `text/x-python` => `python`
+        let file_mime: string = await ipcRenderer.invoke(
+          "get-file-mime",
+          cleanPath(join(path_history.value, data.file_name))
         );
+        if (file_mime.match("text")) {
+          let newPreview: IPreview = {
+            type: "text",
+            body: await ipcRenderer.invoke(
+              "get-file-content-raw",
+              cleanPath(join(path_history.value, data.file_name))
+            ),
+          };
+          curentPreview = newPreview;
+        }
 
       default:
         break;
@@ -67,14 +85,15 @@
   <Navbar />
   <div class="main">
     <FilesContainer onOpen={handleOpen} />
-    <Preview />
+    <Preview {curentPreview} />
   </div>
 </div>
 
 <style>
   .app {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-auto-rows: minmax(0, auto);
+    grid-template-rows: max-content;
 
     height: 100%;
 

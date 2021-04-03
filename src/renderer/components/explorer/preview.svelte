@@ -1,6 +1,5 @@
 <script lang="ts">
-  export let content =
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ipsam itaque, cupiditate ducimus sint maxime quae recusandae pariatur,\n doloribus unde vel aliquid numquam nostrum voluptatem exercitationem blanditiis eveniet laborum corporis.";
+  export let curentPreview: IPreview;
   let resizing = false;
   let current_width = 300;
   function resize(e: MouseEvent) {
@@ -12,12 +11,12 @@
 
 <svelte:body on:mousemove={resize} on:mouseup={() => (resizing = false)} />
 
-{#if content}
+{#if curentPreview.type !== ""}
   <div class="preview" style={`width: ${current_width}px`}>
     <div class="preview__dragger" on:mousedown={() => (resizing = true)} />
     <div class="preview__content">
-      {#if typeof content === "string"}
-        <pre class="preview__body--raw-text">{content}</pre>
+      {#if curentPreview.type === "text"}
+        <pre class="preview__body--raw-text">{curentPreview.body}</pre>
       {/if}
     </div>
   </div>
