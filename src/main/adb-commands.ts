@@ -37,3 +37,8 @@ ipcMain.handle("get-link-data", async (event, path: string) => {
   }
   return ls(c.stdout.trim());
 });
+
+ipcMain.handle("get-file-content-raw", async (event, path: string) => {
+  let c = await shell("cat", [`'${path}'`]);
+  return c.stdout;
+});
